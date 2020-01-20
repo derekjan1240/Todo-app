@@ -1,11 +1,23 @@
 const router = require('express').Router();
 const User = require('../models/user-model');
 
+router.get('/test/all', async (req, res) => {
+    // list all users
+    try {
+        const users = await User.find({});
+        console.log('> List all users: ', users);
+        res.status(201).send(users);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
 router.get('/test/:id', async (req, res) => {
     // list specific user
     try {
         const specificUser = await User.findOne({ _id: req.params.id });
-        if (User) {
+        if (specificUser) {
             console.log('> List User: ', specificUser);
             res.status(201).send(specificUser);
         } else {
