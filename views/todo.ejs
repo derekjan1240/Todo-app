@@ -136,11 +136,39 @@
     }
 
     function listDone(listId){
-        console.log('done:', listId)
+        console.log('done:', listId);
+        fetch(`http://127.0.0.1:3000/list/test/status/${listId}`, {
+            method: 'GET',
+            mode: 'cors',
+            redirect: 'follow',
+            headers: new Headers({
+                'Content-Type': 'text/json'
+            })
+        }).then(function (response) {
+            return response.json()
+        }).then(function (data) {
+            console.log(data)
+        }).catch(function (err) {
+            console.log(err)
+        });
     }
 
     function listRemove(listId){
-        console.log('remove:', listId)
+        console.log('remove:', listId);
+        fetch(`http://127.0.0.1:3000/list/test/${listId}`, {
+            method: 'Delete',
+            mode: 'cors',
+            redirect: 'follow',
+            headers: new Headers({
+                'Content-Type': 'text/json'
+            })
+        }).then(function (response) {
+            return response.json()
+        }).then(function (data) {
+            console.log(data)
+        }).catch(function (err) {
+            console.log(err)
+        })
     }
 
     function loadUsera() {
