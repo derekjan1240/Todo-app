@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 const listSchema = new mongoose.Schema({
     content: String,
+    finished: {
+        type: Boolean,
+        default: false,
+    },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
