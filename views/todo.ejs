@@ -23,7 +23,7 @@
 <body>
     <nav class="navbar navbar-light bg-light justify-content-center mb-5">
         <img class="user-icon m-3" src="https://cdn.iconscout.com/icon/premium/png-256-thumb/rick-sanchez-1-563922.png"
-            style="width: 5%;" onclick="changeIcon()">
+            style="width: 5%;">
     </nav>
     <div class="container">
         <section id="operation">
@@ -73,10 +73,10 @@
             <div class="col-md-2">
                 <div class="d-flex flex-row bd-highlight mb-3">
                     <div class="p-2 bd-highlight">
-                        <button type="button" class="btn btn-success rounded">Done</button>
+                        <button type="button" class="btn btn-success rounded done-btn">Done</button>
                     </div>
                     <div class="p-2 bd-highlight">
-                        <button type="button" class="btn btn-danger rounded">Del</button>
+                        <button type="button" class="btn btn-danger rounded del-btn">Del</button>
                     </div>
                 </div>
             </div>
@@ -115,7 +115,7 @@
     function switchUser(el) {
         const userIcon = document.querySelector('.user-icon');
         currentUser = el.options[el.selectedIndex].value;
-        // userIcon.src = users[currentUser].thumbnail;
+        userIcon.src = users[currentUser].thumbnail;
         generateLists();
     }
 
@@ -127,10 +127,20 @@
                 for (let i = 0; i < lists.length; i++) {
                     const list = document.querySelector('#listTemplate .list').cloneNode(true);
                     list.querySelector('.content').textContent = lists[i].content;
+                    list.querySelector('.done-btn').addEventListener("click", ()=>{listDone(lists[i]._id)});
+                    list.querySelector('.del-btn').addEventListener("click", ()=>{listRemove(lists[i]._id)});
                     listBoard.append(list);
                 }
             });
         }
+    }
+
+    function listDone(listId){
+        console.log('done:', listId)
+    }
+
+    function listRemove(listId){
+        console.log('remove:', listId)
     }
 
     function loadUsera() {
@@ -165,15 +175,6 @@
         }).catch(function (err) {
             console.log(err)
         })
-    }
-
-    function changeIcon() {
-        const userIcon = document.querySelector('.user-icon');
-        const rickUrl = 'https://cdn.iconscout.com/icon/premium/png-256-thumb/rick-sanchez-1-563922.png',
-            mortyUrl = 'https://i.ya-webdesign.com/images/rick-and-morty-icon-circle-png-4.png';
-        userIcon.src === rickUrl ? userIcon.src = mortyUrl : userIcon.src = rickUrl;
-        // currentUser = (currentUser+1)%2;
-        // generateLists()
     }
 </script>
 
