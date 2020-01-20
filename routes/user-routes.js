@@ -44,4 +44,19 @@ router.post('/test', async (req, res) => {
     }
 });
 
+router.delete('/test/:userid', async (req, res) => {
+    try {
+        const deleteUser = await User.deleteOne({ _id: req.params.userid });
+        if (deleteUser) {
+            console.log('> Delete User: ', deleteUser);
+            res.status(201).send(deleteUser);
+        } else {
+            res.status(404).send();
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err);
+    }
+});
+
 module.exports = router;
