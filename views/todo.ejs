@@ -115,8 +115,10 @@
     function switchUser(el) {
         const userIcon = document.querySelector('.user-icon');
         currentUser = el.options[el.selectedIndex].value;
-        userIcon.src = users[currentUser].thumbnail;
-        generateLists();
+        if (currentUser != -1) {
+            userIcon.src = users[currentUser].thumbnail;
+            generateLists();
+        }
     }
 
     async function generateLists() {
@@ -128,12 +130,12 @@
                     const list = document.querySelector('#listTemplate .list').cloneNode(true);
                     const listContent = list.querySelector('.content');
                     listContent.textContent = lists[i].content;
-                    list.querySelector('.done-btn').addEventListener("click", ()=>{listDone(lists[i]._id)});
-                    list.querySelector('.del-btn').addEventListener("click", ()=>{listRemove(lists[i]._id)});
-                    if(lists[i].finished){
+                    list.querySelector('.done-btn').addEventListener("click", () => { listDone(lists[i]._id) });
+                    list.querySelector('.del-btn').addEventListener("click", () => { listRemove(lists[i]._id) });
+                    if (lists[i].finished) {
                         listContent.classList.remove("alert-info");
                         listContent.classList.add("alert-success");
-                    }else{
+                    } else {
                         listContent.classList.remove("alert-success");
                         listContent.classList.add("alert-info");
                     }
@@ -143,7 +145,7 @@
         }
     }
 
-    function listDone(listId){
+    function listDone(listId) {
         fetch(`http://127.0.0.1:3000/list/test/status/${listId}`, {
             method: 'GET',
             mode: 'cors',
@@ -160,7 +162,7 @@
         });
     }
 
-    function listRemove(listId){
+    function listRemove(listId) {
         fetch(`http://127.0.0.1:3000/list/test/${listId}`, {
             method: 'Delete',
             mode: 'cors',
@@ -177,28 +179,30 @@
         })
     }
 
-    function addList(){ 
-        data = {
-            content: document.querySelector('.new-list-content').value,
-            owner: users[currentUser]._id
-        }
-        fetch(`http://127.0.0.1:3000/list/test`, {
-            method: 'Post',
-            body: JSON.stringify(data),
-            mode: 'cors',
-            redirect: 'follow',
-            headers: new Headers({
-                'Content-Type': 'application/json'
+    function addList() {
+        if (currentUser != -1) {
+            data = {
+                content: document.querySelector('.new-list-content').value,
+                owner: users[currentUser]._id
+            }
+            fetch(`http://127.0.0.1:3000/list/test`, {
+                method: 'Post',
+                body: JSON.stringify(data),
+                mode: 'cors',
+                redirect: 'follow',
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                })
+            }).then((response) => {
+                return response.json()
+            }).then((data) => {
+                generateLists();
+                document.querySelector('.new-list-content').value = '';
+                $('#exampleModal').modal('hide');
+            }).catch((err) => {
+                console.log(err)
             })
-        }).then((response) => {
-            return response.json()
-        }).then((data) => {
-            generateLists();
-            document.querySelector('.new-list-content').value = '';
-            $('#exampleModal').modal('hide');
-        }).catch((err) => {
-            console.log(err)
-        })
+        }
     }
 
     function loadUsera() {
@@ -209,11 +213,11 @@
             headers: new Headers({
                 'Content-Type': 'text/json'
             })
-        }).then(function (response) {
+        }).then((response) => {
             return response.json()
-        }).then(function (data) {
+        }).then((data) => {
             return data
-        }).catch(function (err) {
+        }).catch((err) => {
             console.log(err)
         })
     }
@@ -226,11 +230,11 @@
             headers: new Headers({
                 'Content-Type': 'text/json'
             })
-        }).then(function (response) {
+        }).then((response) => {
             return response.json()
-        }).then(function (data) {
+        }).then((data) => {
             return data
-        }).catch(function (err) {
+        }).catch((err) => {
             console.log(err)
         })
     }
