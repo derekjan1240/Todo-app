@@ -31,15 +31,15 @@ router.post('/test', async (req, res) => {
     }
 });
 
-router.post('/test/status/:listid', async (req, res) => {
+router.get('/test/status/:listid', async (req, res) => {
     try {
-        const list = await List.find({ _id: req.params.listid });
+        const list = await List.findOne({ _id: req.params.listid });
         if (list) {
             list.finished = !list.finished;
-            list.save(() => {
-                console.log('> Status Change List: ', list);
+            list.save().then((statusList) => {
+                console.log('> List: ', statusList);
+                res.status(201).send(statusList);
             });
-            res.status(201).send(list);
         } else {
             res.status(404).send();
         }
