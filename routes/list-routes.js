@@ -5,7 +5,7 @@ router.get('/test/:userid', async (req, res) => {
     try {
         const userLists = await List.find({ owner: req.params.userid });
         if (userLists) {
-            console.log('> List User: ', userLists);
+            console.log('> List User Lists: ', userLists);
             res.status(201).send(userLists);
         } else {
             res.status(404).send();
