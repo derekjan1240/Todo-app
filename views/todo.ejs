@@ -29,9 +29,8 @@
         <section id="operation">
             <div class="d-flex flex-row bd-highlight mb-3">
                 <div class="p-2 bd-highlight">
-                    <select class="custom-select" id="inputGroupSelect01">
-                        <option selected>Choose...</option>
-                        <option value="1">One</option>
+                    <select class="custom-select" id="inputGroupSelect01" onchange="switchUser(this)">
+                        <option value="-1">Choose</option>
                     </select>
                 </div>
                 <div class="p-2 bd-highlight">
@@ -88,36 +87,54 @@
 </html>
 
 <script>
-    const users = ['5e256610465d6f618885c489', '5e256c6e3d434a540c775dd0']; // For test
-    let currentUser = 0;
+    let users = [];
+    let currentUser = -1;
 
-    window.onload = function(){
+    window.onload = function () {
         init()
     }
 
     function init() {
-        generateLists()
+        loadUsera().then((data) => {
+            users = data;
+            createUserOptions();
+        })
     }
 
-    function changeIcon() {
+    function createUserOptions() {
+        const userSelector = document.querySelector('.custom-select');
+        users.forEach((user, index) => {
+            let option = document.createElement('option');
+            let textNode = document.createTextNode(`${user.name}`);
+            option.setAttribute('value', `${index}`);
+            option.appendChild(textNode);
+            userSelector.appendChild(option);
+        });
+    }
+
+    function switchUser(el) {
         const userIcon = document.querySelector('.user-icon');
-        const rickUrl = 'https://cdn.iconscout.com/icon/premium/png-256-thumb/rick-sanchez-1-563922.png',
-            mortyUrl = 'https://i.ya-webdesign.com/images/rick-and-morty-icon-circle-png-4.png';
-        userIcon.src === rickUrl ? userIcon.src = mortyUrl : userIcon.src = rickUrl;
-        currentUser = (currentUser+1)%2;
-        generateLists()
+        currentUser = el.options[el.selectedIndex].value;
+        // userIcon.src = users[currentUser].thumbnail;
+        generateLists();
     }
 
-    function addList() {
-        const list = document.querySelector('#listTemplate .list');
+    async function generateLists() {
+        const listBoard = document.querySelector('#listBoard .container');
+        listBoard.innerHTML = '';
+        if (currentUser != -1) {
+            loadLists().then((lists) => {
+                for (let i = 0; i < lists.length; i++) {
+                    const list = document.querySelector('#listTemplate .list').cloneNode(true);
+                    list.querySelector('.content').textContent = lists[i].content;
+                    listBoard.append(list);
+                }
+            });
+        }
     }
 
-    function loadUser(){
-        
-    }
-
-    function loadLists() {
-        return fetch(`http://127.0.0.1:3000/list/test/${users[currentUser]}`, {
+    function loadUsera() {
+        return fetch(`http://127.0.0.1:3000/user/test/all`, {
             method: 'GET',
             mode: 'cors',
             redirect: 'follow',
@@ -133,21 +150,35 @@
         })
     }
 
-    async function generateLists() {
-        const listBoard = document.querySelector('#listBoard .container');
-        listBoard.innerHTML='';
-        loadLists().then((lists) => {
-            for (let i = 0; i < lists.length; i++) {
-                const list = document.querySelector('#listTemplate .list').cloneNode(true); 
-                list.querySelector('.content').textContent = lists[i].content;
-                listBoard.append(list);
-            }
-        });
+    function loadLists() {
+        return fetch(`http://127.0.0.1:3000/list/test/${users[currentUser]._id}`, {
+            method: 'GET',
+            mode: 'cors',
+            redirect: 'follow',
+            headers: new Headers({
+                'Content-Type': 'text/json'
+            })
+        }).then(function (response) {
+            return response.json()
+        }).then(function (data) {
+            return data
+        }).catch(function (err) {
+            console.log(err)
+        })
+    }
+
+    function changeIcon() {
+        const userIcon = document.querySelector('.user-icon');
+        const rickUrl = 'https://cdn.iconscout.com/icon/premium/png-256-thumb/rick-sanchez-1-563922.png',
+            mortyUrl = 'https://i.ya-webdesign.com/images/rick-and-morty-icon-circle-png-4.png';
+        userIcon.src === rickUrl ? userIcon.src = mortyUrl : userIcon.src = rickUrl;
+        // currentUser = (currentUser+1)%2;
+        // generateLists()
     }
 </script>
 
 <style>
-    .alert{
+    .alert {
         margin-bottom: 0px;
     }
 </style>
