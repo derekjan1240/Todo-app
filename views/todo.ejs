@@ -35,14 +35,16 @@
                     </select>
                 </div>
                 <div class="p-2 bd-highlight">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Add</button>
+                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                        data-target="#exampleModal">Add</button>
                 </div>
             </div>
         </section>
-        <section id="listBoard bg-light">
+        <section id="listBoard" class="bg-light">
             <div class="container"></div>
         </section>
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -52,7 +54,8 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username">
+                        <input type="text" class="form-control" placeholder="Recipient's username"
+                            aria-label="Recipient's username">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary">Add</button>
@@ -63,12 +66,10 @@
     </div>
 </body>
 <div id='listTemplate' class="d-none">
-    <div class="list">
+    <div class="list p-2">
         <div class="row align-items-center">
             <div class="col-md-10">
-                <div class="alert alert-info" role="alert">
-                    A simple info alert—check it out!
-                </div>
+                <div class="alert alert-info content" role="alert"></div>
             </div>
             <div class="col-md-2">
                 <div class="d-flex flex-row bd-highlight mb-3">
@@ -87,14 +88,66 @@
 </html>
 
 <script>
+    const users = ['5e256610465d6f618885c489', '5e256c6e3d434a540c775dd0']; // For test
+    let currentUser = 0;
+
+    window.onload = function(){
+        init()
+    }
+
+    function init() {
+        generateLists()
+    }
+
     function changeIcon() {
         const userIcon = document.querySelector('.user-icon');
         const rickUrl = 'https://cdn.iconscout.com/icon/premium/png-256-thumb/rick-sanchez-1-563922.png',
             mortyUrl = 'https://i.ya-webdesign.com/images/rick-and-morty-icon-circle-png-4.png';
         userIcon.src === rickUrl ? userIcon.src = mortyUrl : userIcon.src = rickUrl;
+        currentUser = (currentUser+1)%2;
+        generateLists()
     }
 
     function addList() {
         const list = document.querySelector('#listTemplate .list');
     }
+
+    function loadUser(){
+        
+    }
+
+    function loadLists() {
+        return fetch(`http://127.0.0.1:3000/list/test/${users[currentUser]}`, {
+            method: 'GET',
+            mode: 'cors',
+            redirect: 'follow',
+            headers: new Headers({
+                'Content-Type': 'text/json'
+            })
+        }).then(function (response) {
+            return response.json()
+        }).then(function (data) {
+            return data
+        }).catch(function (err) {
+            console.log(err)
+        })
+    }
+
+    async function generateLists() {
+        const listBoard = document.querySelector('#listBoard .container');
+        listBoard.innerHTML='';
+        loadLists().then((lists) => {
+            for (let i = 0; i < lists.length; i++) {
+                const list = document.querySelector('#listTemplate .list').cloneNode(true); 
+                list.querySelector('.content').textContent = lists[i].content;
+                listBoard.append(list);
+            }
+        });
+    }
 </script>
+
+<style>
+    .alert{
+        margin-bottom: 0px;
+    }
+</style>
