@@ -8,6 +8,10 @@ const keys = require('./config/keys');
 
 const app = express();
 
+// Routes
+const listRoutes = require('./routes/list-routes');
+const userRoutes = require('./routes/user-routes');
+
 // connect to mongodb
 mongoose.connect(keys.mongodb.dbURI,
     {
@@ -25,6 +29,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(bodyParser.json());
+
+// Set up routes
+app.use('/list', listRoutes);
+app.use('/user', userRoutes);
 
 // Setup static directory to server
 app.use(express.static('public'));

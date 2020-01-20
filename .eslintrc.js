@@ -19,6 +19,7 @@ module.exports = {
     "indent": ["error", 4],
     'max-len': [1, 120, 2],
     'no-console': 'off',
+    'linebreak-style': 'off'
   },
   settings: {
     'import/resolver': {
