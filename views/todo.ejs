@@ -53,11 +53,11 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <input type="text" class="form-control" placeholder="Recipient's username"
+                        <input type="text" class="new-list-content form-control" placeholder="Recipient's username"
                             aria-label="Recipient's username">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Add</button>
+                        <button type="button" class="btn btn-primary" onclick="addList()">Add</button>
                     </div>
                 </div>
             </div>
@@ -126,9 +126,17 @@
             loadLists().then((lists) => {
                 for (let i = 0; i < lists.length; i++) {
                     const list = document.querySelector('#listTemplate .list').cloneNode(true);
-                    list.querySelector('.content').textContent = lists[i].content;
+                    const listContent = list.querySelector('.content');
+                    listContent.textContent = lists[i].content;
                     list.querySelector('.done-btn').addEventListener("click", ()=>{listDone(lists[i]._id)});
                     list.querySelector('.del-btn').addEventListener("click", ()=>{listRemove(lists[i]._id)});
+                    if(lists[i].finished){
+                        listContent.classList.remove("alert-info");
+                        listContent.classList.add("alert-success");
+                    }else{
+                        listContent.classList.remove("alert-success");
+                        listContent.classList.add("alert-info");
+                    }
                     listBoard.append(list);
                 }
             });
@@ -136,7 +144,6 @@
     }
 
     function listDone(listId){
-        console.log('done:', listId);
         fetch(`http://127.0.0.1:3000/list/test/status/${listId}`, {
             method: 'GET',
             mode: 'cors',
@@ -147,14 +154,13 @@
         }).then(function (response) {
             return response.json()
         }).then(function (data) {
-            console.log(data)
+            generateLists()
         }).catch(function (err) {
             console.log(err)
         });
     }
 
     function listRemove(listId){
-        console.log('remove:', listId);
         fetch(`http://127.0.0.1:3000/list/test/${listId}`, {
             method: 'Delete',
             mode: 'cors',
@@ -165,8 +171,32 @@
         }).then(function (response) {
             return response.json()
         }).then(function (data) {
-            console.log(data)
+            generateLists()
         }).catch(function (err) {
+            console.log(err)
+        })
+    }
+
+    function addList(){ 
+        data = {
+            content: document.querySelector('.new-list-content').value,
+            owner: users[currentUser]._id
+        }
+        fetch(`http://127.0.0.1:3000/list/test`, {
+            method: 'Post',
+            body: JSON.stringify(data),
+            mode: 'cors',
+            redirect: 'follow',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            })
+        }).then((response) => {
+            return response.json()
+        }).then((data) => {
+            generateLists();
+            document.querySelector('.new-list-content').value = '';
+            $('#exampleModal').modal('hide');
+        }).catch((err) => {
             console.log(err)
         })
     }
