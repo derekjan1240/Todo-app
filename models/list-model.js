@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 
-const { Schema } = mongoose.Schema;
-
-const listSchema = new Schema({
+const listSchema = new mongoose.Schema({
     content: String,
     owner: {
         type: mongoose.Schema.Types.ObjectId,

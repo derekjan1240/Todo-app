@@ -9,7 +9,7 @@ const keys = require('./config/keys');
 const app = express();
 
 // Routes
-const dataRoutes = require('./routes/data-routes');
+const listRoutes = require('./routes/list-routes');
 const userRoutes = require('./routes/user-routes');
 
 // connect to mongodb
@@ -31,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Set up routes
-app.use('/data', dataRoutes);
+app.use('/list', listRoutes);
 app.use('/user', userRoutes);
 
 // Setup static directory to server
