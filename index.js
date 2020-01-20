@@ -33,7 +33,7 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
-    res.render('home');
+    res.render('todo');
 });
 
 app.listen('3000', () => {
