@@ -5,7 +5,7 @@ router.get('/test/:userid', async (req, res) => {
     try {
         const userLists = await List.find({ owner: req.params.userid });
         if (userLists) {
-            console.log('> List User Lists: ', userLists);
+            // console.log('> List User Lists: ', userLists);
             res.status(201).send(userLists);
         } else {
             res.status(404).send();
@@ -23,7 +23,7 @@ router.post('/test', async (req, res) => {
 
     try {
         await newList.save();
-        console.log('> Created new List: ', newList);
+        // console.log('> Created new List: ', newList);
         res.status(201).send(newList);
     } catch (err) {
         console.log(err);
@@ -37,7 +37,7 @@ router.get('/test/status/:listid', async (req, res) => {
         if (list) {
             list.finished = !list.finished;
             list.save().then((statusList) => {
-                console.log('> List: ', statusList);
+                // console.log('> List: ', statusList);
                 res.status(201).send(statusList);
             });
         } else {
@@ -53,7 +53,7 @@ router.delete('/test/:listid', async (req, res) => {
     try {
         const deleteLists = await List.deleteOne({ _id: req.params.listid });
         if (deleteLists) {
-            console.log('> Delete List: ', deleteLists);
+            // console.log('> Delete List: ', deleteLists);
             res.status(201).send(deleteLists);
         } else {
             res.status(404).send();
