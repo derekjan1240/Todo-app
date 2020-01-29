@@ -1,2 +1,7 @@
 node_modules
 config/keys.js
+/cypress/screenshots
+/cypress/snapshots
+/cypress/videos
+/cypress/integration/examples
+test-results.xml

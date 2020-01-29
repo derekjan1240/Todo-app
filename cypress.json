@@ -1,0 +1,12 @@
+{
+    "chromeWebSecurity": false,
+    "video": false,
+    "baseUrl": "http://127.0.0.1:3000/",
+    "env": {
+        "failOnSnapshotDiff": true
+    },
+    "reporter": "junit",
+    "reporterOptions": {
+        "toConsole": false
+    }
+}

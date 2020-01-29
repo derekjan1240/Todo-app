@@ -6,6 +6,7 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cypress-image-snapshot": "^3.1.1",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
     "mongoose": "^5.8.9"
@@ -17,6 +18,7 @@
     "eslint-plugin-import": "^2.20.0"
   },
   "scripts": {
+    "test": "cypress run --spec cypress/integration/sample.spec.js --browser chrome",
     "cypress:open": "cypress open"
   }
 }
