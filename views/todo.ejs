@@ -34,13 +34,12 @@
                     </select>
                 </div>
                 <div class="p-2 bd-highlight">
-                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                    <button id="addListBtn" type="button" class="btn btn-primary d-none" data-toggle="modal"
                         data-target="#exampleModal">Add</button>
                 </div>
             </div>
         </section>
-        <section id="listBoard" class="bg-light">
-            <div class="container"></div>
+        <section id="listBoard" class="container bg-light">
         </section>
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
@@ -114,15 +113,22 @@
 
     function switchUser(el) {
         const userIcon = document.querySelector('.user-icon');
+        const addListBtn = document.querySelector('#addListBtn');
+        const listBoard = document.querySelector('#listBoard');
         currentUser = el.options[el.selectedIndex].value;
         if (currentUser != -1) {
+            addListBtn.classList.remove("d-none");
             userIcon.src = users[currentUser].thumbnail;
             generateLists();
+        }else{
+            listBoard.innerHTML = '';
+            addListBtn.classList.add("d-none");
+            userIcon.src = "https://previews.123rf.com/images/tartila/tartila1810/tartila181000072/110800551-green-grunge-check-mark-correct-answer-checking-vote-or-choice-approval-icon-checks-brush-mark-label.jpg";
         }
     }
 
     async function generateLists() {
-        const listBoard = document.querySelector('#listBoard .container');
+        const listBoard = document.querySelector('#listBoard');
         listBoard.innerHTML = '';
         if (currentUser != -1) {
             loadLists().then((lists) => {
